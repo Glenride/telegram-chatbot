@@ -1,0 +1,119 @@
+# =====================================================================
+#  VAPOR WIRE — bot configuration
+#  Copy this file to "chats.yaml" and fill in YOUR chat IDs:
+#      cp chats.yaml.example chats.yaml
+#
+#  HOW TO GET A CHAT ID:
+#    1. Add the bot to the group/channel (see docs/deploy-imac.md).
+#    2. In that chat, send:  /id
+#    3. The bot replies with the chat ID. Paste it below, replacing
+#       the placeholder. Group/channel IDs are negative and usually
+#       start with -100 (e.g. -1001234567890).
+#
+#  You can use {name} in welcome text (replaced with the new member's
+#  first name) and {chat} (replaced with the chat's configured name).
+#  Everything here is optional except chat_id — delete any section
+#  you don't want.
+# =====================================================================
+
+global:
+  timezone: "America/New_York"
+  digest:
+    enabled: true        # daily activity digest -> ADMIN_CHAT_ID
+    time: "21:00"        # 24h clock, in the timezone above
+
+# =====================================================================
+#  VAPOR WIRE CHANNELS
+#  One entry per chat the bot manages. Replace every placeholder ID.
+# =====================================================================
+chats:
+
+  # --- vapor wire main discussion group ---
+  - chat_id: -1001111111111   # <-- REPLACE with the real group ID
+    name: "vapor wire — main"
+
+    welcome:
+      enabled: true
+      text: "Welcome to the wire, {name}."
+      rules: |
+        A few house rules so the signal stays strong:
+        1. No spam, no shilling, no unsolicited DMs.
+        2. Keep it on-topic: crypto, AI, and building.
+        3. No links for your first 24 hours — introductions first.
+        4. Respect the room. Mods have final say.
+      button_text: "Read the pinned post"
+      button_url: "https://t.me/your_channel_here"   # <-- REPLACE
+
+    schedules:
+      # cron = minute hour day-of-month month day-of-week (5 fields)
+      - name: "morning-wire"
+        cron: "0 9 * * *"
+        text: "Morning, wire. What's everyone building today?"
+      - name: "weekly-roundup"
+        cron: "0 18 * * 5"
+        text: "Weekly roundup drops in the channel soon. Drop your wins below."
+
+    crosspost:
+      to: []                 # e.g. [-1003333333333] to mirror posts elsewhere
+      header: ""
+      footer: ""
+
+    moderation:
+      enabled: true
+      flood:
+        max_messages: 5      # more than 5 messages...
+        per_seconds: 10      # ...within 10 seconds = flood
+      new_member_link_hours: 24   # delete links from members newer than this
+      banned_words: ["scam", "free money", "guaranteed profit", "dm me for"]
+      warn_limit: 3          # warns before an automatic mute
+      mute_minutes: 60
+      delete_banned: true    # delete messages containing banned words
+      flag_forwards: true    # delete forwarded messages, warn the sender
+
+    keywords:
+      - "vapor wire"
+      - "wavy"
+      - "spin"
+
+  # --- vapor wire announcements channel ---
+  - chat_id: -1002222222222   # <-- REPLACE with the real channel ID
+    name: "vapor wire — announcements"
+
+    schedules:
+      - name: "announcement-nudge"
+        cron: "0 12 * * 1"
+        text: "This week's wire drops are live in the main group."
+
+    crosspost:
+      to: [-1001111111111]   # mirror channel posts into the main group
+      header: "From announcements:"
+      footer: ""
+
+    moderation:
+      enabled: false
+    keywords: []
+
+  # --- vapor wire off-topic / lounge (example: minimal config) ---
+  - chat_id: -1003333333333   # <-- REPLACE with the real group ID
+    name: "vapor wire — lounge"
+
+    welcome:
+      enabled: true
+      text: "Pull up a chair, {name}. This is the lounge — keep it light."
+      rules: ""
+      button_text: ""
+      button_url: ""
+
+    moderation:
+      enabled: true
+      flood:
+        max_messages: 8
+        per_seconds: 10
+      new_member_link_hours: 12
+      banned_words: []
+      warn_limit: 3
+      mute_minutes: 30
+      delete_banned: true
+      flag_forwards: false
+
+    keywords: []

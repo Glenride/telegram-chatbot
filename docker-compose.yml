@@ -1,0 +1,15 @@
+services:
+  vaporwire-bot:
+    build: .
+    container_name: vaporwire-bot
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      TZ: America/New_York
+    volumes:
+      # Config files are mounted (not baked in) so you can edit them
+      # on the iMac and restart without rebuilding.
+      - ./chats.yaml:/app/chats.yaml:ro
+      - /home/housedv/projects/fleet-wiki/wiki:/app/fleet-wiki:ro
+      # SQLite database lives here so state survives restarts/updates.
+      - ./data:/app/data
